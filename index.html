@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blackjack</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <!-- Toggle Button (fixed at top right; DO NOT CHANGE THE TOGGLE BUTTON CODE) -->
+    <div id="theme-toggle" class="theme-toggle">
+      <div class="icon sun-icon">☀️</div>
+      <div class="icon moon-icon">🌙</div>
+    </div>
+
+    <!-- Header Section with centered Title -->
+    <header class="header">
+      <h1 class="site-title"></h1>
+    </header>
+
+    <!-- Main Container (Game Section, etc.) -->
+    <div class="main-container">
+      <main class="game-container">
+        <div class="game-status">
+          {% if player_hand %}
+          <div class="player-section">
+            <h2>Your Hand</h2>
+            <p class="hand">
+              {% for card in player_hand %}
+                {{ card }} 
+              {% endfor %}
+            </p>
+            <p class="score">Score: {{ player_score }}</p>
+          </div>
+          
+          {% if game_over and dealer_hand %}
+  <div class="dealer-section">
+    <h2>Dealer's Hand</h2>
+    <p class="hand">
+      {% for card in dealer_hand %}
+        {{ card }} 
+      {% endfor %}
+    </p>
+    <p class="score">Dealer's Score: {{ dealer_score }}</p>
+  </div>
+{% elif dealer_first_card %}
+  <div class="dealer-section">
+    <h2>Dealer's Hand</h2>
+    <p class="hand">{{ dealer_first_card }} ?</p>
+  </div>
+{% endif %}
+          {% endif %}
+        </div>
+
+        <div class="result-message">
+          <p>{{ result }}</p>
+        </div>
+
+        <!-- Buttons -->
+        <!-- Combine into a single form with different actions -->
+<div class="buttons">
+    <form method="POST" class="buttons">
+      {% if game_over %}
+        <button type="submit" name="move" value="start" class="btn">Play Again</button>
+      {% elif not player_hand %}
+        <button type="submit" name="move" value="start" class="btn">Start New Game</button>
+      {% else %}
+        <button type="submit" name="move" value="hit" class="btn">Hit</button>
+        <button type="submit" name="move" value="stand" class="btn">Stand</button>
+      {% endif %}
+      
+      {% if player_hand %}
+        <button type="submit" name="move" value="exit" class="btn">Exit Game</button>
+      {% endif %}
+    </form>
+  </div> 
+        </form>
+      </main>
+
+      <!-- Footer Section -->
+      <footer class="footer">
+        <p>
+          &copy; Made with ❤️ by
+          <a href="https://github.com/UnknownPPirate" target="_blank">UnknownPPirate</a>
+        </p>
+      </footer>
+    </div>
+
+    <!-- JavaScript for persistent Light/Dark mode -->
+    <script>
+      const themeToggle = document.getElementById("theme-toggle");
+      const body = document.body;
+
+      // Check for saved theme in localStorage and apply it
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme) {
+        body.classList.add(savedTheme);
+      }
+
+      const updateToggle = () => {
+        if (body.classList.contains("dark-mode")) {
+          themeToggle.classList.add("dark");
+          localStorage.setItem("theme", "dark-mode");
+        } else {
+          themeToggle.classList.remove("dark");
+          localStorage.setItem("theme", "light-mode");
+        }
+      };
+
+      // Toggle the theme when clicking the toggle button
+      themeToggle.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+        updateToggle();
+      });
+
+      updateToggle();
+    </script>
+  </body>
+</html>
